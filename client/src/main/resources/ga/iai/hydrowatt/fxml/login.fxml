@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="14.0" styleClass="auth-container" xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="ga.iai.hydrowatt.controller.LoginController">
+    <padding><Insets bottom="40.0" left="40.0" right="40.0" top="40.0"/></padding>
+
+    <Label styleClass="title" text="HydroWatt"/>
+    <Label styleClass="subtitle" text="Énergie hydroélectrique gabonaise — Connexion"/>
+
+    <VBox maxWidth="340.0" spacing="10.0">
+        <Label text="Identifiant"/>
+        <TextField fx:id="usernameField" promptText="nom d'utilisateur"/>
+        <Label text="Mot de passe"/>
+        <PasswordField fx:id="passwordField" promptText="mot de passe"/>
+        <Label fx:id="errorLabel" managed="false" styleClass="error-label" visible="false" wrapText="true"/>
+        <Button fx:id="loginButton" defaultButton="true" onAction="#handleLogin" styleClass="primary-button" text="Se connecter"/>
+        <Hyperlink onAction="#handleForgotPassword" text="Mot de passe oublié ?"/>
+    </VBox>
+</VBox>

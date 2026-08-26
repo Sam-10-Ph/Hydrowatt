@@ -1,0 +1,15 @@
+C:\hydrowatt\client\src\main\java\ga\iai\hydrowatt\controller\DashboardController.java
+C:\hydrowatt\client\src\main\java\ga\iai\hydrowatt\controller\ForgotPasswordController.java
+C:\hydrowatt\client\src\main\java\ga\iai\hydrowatt\controller\LoginController.java
+C:\hydrowatt\client\src\main\java\ga\iai\hydrowatt\controller\ResetPasswordController.java
+C:\hydrowatt\client\src\main\java\ga\iai\hydrowatt\controller\Verify2FAController.java
+C:\hydrowatt\client\src\main\java\ga\iai\hydrowatt\HydroWattApp.java
+C:\hydrowatt\client\src\main\java\ga\iai\hydrowatt\model\Barrage.java
+C:\hydrowatt\client\src\main\java\ga\iai\hydrowatt\model\ProductionJournaliere.java
+C:\hydrowatt\client\src\main\java\ga\iai\hydrowatt\model\ReleveNiveauEau.java
+C:\hydrowatt\client\src\main\java\ga\iai\hydrowatt\model\Utilisateur.java
+C:\hydrowatt\client\src\main\java\ga\iai\hydrowatt\service\ApiClient.java
+C:\hydrowatt\client\src\main\java\ga\iai\hydrowatt\service\ApiException.java
+C:\hydrowatt\client\src\main\java\ga\iai\hydrowatt\service\JsonMapper.java
+C:\hydrowatt\client\src\main\java\ga\iai\hydrowatt\service\Session.java
+C:\hydrowatt\client\src\main\java\ga\iai\hydrowatt\util\SceneManager.java

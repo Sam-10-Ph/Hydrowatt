@@ -1,0 +1,69 @@
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: #f4f7f6;
+}
+
+.auth-container {
+    -fx-background-color: linear-gradient(to bottom right, #0b3d2e, #1b6b52);
+}
+
+.title {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #d7ede4;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+.primary-button {
+    -fx-background-color: #1b6b52;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16 8 16;
+    -fx-background-radius: 4;
+}
+
+.primary-button:hover {
+    -fx-background-color: #14503d;
+}
+
+.secondary-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #1b6b52;
+    -fx-border-color: #1b6b52;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.error-label {
+    -fx-text-fill: #ffb3b3;
+    -fx-font-size: 12px;
+}
+
+.info-label {
+    -fx-text-fill: #d7ede4;
+    -fx-font-size: 12px;
+}
+
+.toolbar-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0b3d2e;
+}
+
+.dashboard-toolbar {
+    -fx-background-color: white;
+    -fx-padding: 10 20 10 20;
+    -fx-border-color: transparent transparent #dddddd transparent;
+    -fx-border-width: 1;
+}
+
+.correlation-hint {
+    -fx-font-size: 12px;
+    -fx-text-fill: #555555;
+}
