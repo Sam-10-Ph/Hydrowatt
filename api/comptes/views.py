@@ -49,6 +49,12 @@ class LoginView(APIView):
 
         if user.is_2fa_enabled:
             pre_auth_token = signing.dumps({"user_id": user.id}, salt=PRE_AUTH_SALT)
+            # DEV/DEMO uniquement : affiche le code TOTP courant dans le terminal
+            # pour éviter de le regénérer manuellement à chaque connexion.
+            import pyotp
+            secret = user.get_or_create_otp_secret()
+            current_code = pyotp.TOTP(secret).now()
+            print(f"\n>>> [DEV] Code 2FA pour {user.username} : {current_code}\n")
             return Response({"requires_2fa": True, "pre_auth_token": pre_auth_token})
 
         return Response({"requires_2fa": False, **tokens_for_user(user)})
