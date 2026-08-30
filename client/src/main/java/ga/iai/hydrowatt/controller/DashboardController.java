@@ -123,10 +123,34 @@ public class DashboardController {
         task.setOnSucceeded(e -> Platform.runLater(onDone));
         task.setOnFailed(e -> Platform.runLater(() -> {
             Throwable ex = task.getException();
-            String msg = ex instanceof ApiException apiEx ? apiEx.getMessage() : "Erreur réseau : " + ex;
-            new Alert(Alert.AlertType.ERROR, msg).showAndWait();
+            // Les tâches enveloppent souvent la vraie cause dans un RuntimeException
+            // (voir les blocs "throw new RuntimeException(e)" plus bas) : on la déballe
+            // pour retrouver le message exact renvoyé par l'API.
+            Throwable cause = ex;
+            while (cause != null && !(cause instanceof ApiException) && cause.getCause() != null) {
+                cause = cause.getCause();
+            }
+            String msg = cause instanceof ApiException apiEx
+                    ? "Erreur API (" + apiEx.getStatusCode() + ") : " + apiEx.getMessage()
+                    : "Erreur réseau : " + (cause != null ? cause.toString() : String.valueOf(ex));
+            showFullErrorAlert(msg);
         }));
         new Thread(task).start();
+    }
+
+    /** Affiche une erreur dans une boîte redimensionnable qui n'est jamais tronquée. */
+    private void showFullErrorAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Erreur");
+        alert.setHeaderText(null);
+        TextArea area = new TextArea(message);
+        area.setEditable(false);
+        area.setWrapText(true);
+        area.setPrefWidth(480);
+        area.setPrefHeight(160);
+        alert.getDialogPane().setContent(area);
+        alert.setResizable(true);
+        alert.showAndWait();
     }
 
     // -----------------------------------------------------------

@@ -62,7 +62,6 @@
                         <TextField fx:id="releveNiveauMinField" prefWidth="100.0" promptText="Niveau min (m)"/>
                         <Button onAction="#handleFilterReleves" text="Filtrer"/>
                         <HBox HBox.hgrow="ALWAYS"/>
-                        <Button onAction="#handleNewReleve" styleClass="primary-button" text="+ Nouveau relevé"/>
                     </HBox>
                     <TableView fx:id="releveTable" VBox.vgrow="ALWAYS">
                         <columns>
@@ -88,7 +87,6 @@
                         <TextField fx:id="productionMinField" prefWidth="130.0" promptText="Production min (MWh)"/>
                         <Button onAction="#handleFilterProductions" text="Filtrer"/>
                         <HBox HBox.hgrow="ALWAYS"/>
-                        <Button onAction="#handleNewProduction" styleClass="primary-button" text="+ Nouvelle production"/>
                     </HBox>
                     <TableView fx:id="productionTable" VBox.vgrow="ALWAYS">
                         <columns>
