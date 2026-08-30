@@ -23,10 +23,23 @@ class BarrageViewSet(viewsets.ModelViewSet):
         """
         Défi technique du sujet : met en évidence la corrélation entre le
         niveau d'eau et la production journalière pour ce barrage.
+        Filtrable par période via ?date_debut=YYYY-MM-DD&date_fin=YYYY-MM-DD.
         """
         barrage = self.get_object()
-        releves = {r.date: r.niveau_m for r in barrage.releves_niveau.all()}
-        productions = {p.date: p.energie_produite_mwh for p in barrage.productions.all()}
+        releves_qs = barrage.releves_niveau.all()
+        productions_qs = barrage.productions.all()
+
+        date_debut = request.query_params.get("date_debut")
+        date_fin = request.query_params.get("date_fin")
+        if date_debut:
+            releves_qs = releves_qs.filter(date__gte=date_debut)
+            productions_qs = productions_qs.filter(date__gte=date_debut)
+        if date_fin:
+            releves_qs = releves_qs.filter(date__lte=date_fin)
+            productions_qs = productions_qs.filter(date__lte=date_fin)
+
+        releves = {r.date: r.niveau_m for r in releves_qs}
+        productions = {p.date: p.energie_produite_mwh for p in productions_qs}
         dates = sorted(set(releves) | set(productions))
         data = [
             {

@@ -16,6 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -60,10 +61,12 @@ public class DashboardController {
     @FXML private TableColumn<ProductionJournaliere, String> colProductionDate;
     @FXML private TableColumn<ProductionJournaliere, String> colProductionEnergie;
 
-    // Corrélation
+        // Corrélation
     @FXML private ComboBox<Barrage> correlationBarrageChoice;
-    @FXML private LineChart<Number, Number> correlationChart;
-    @FXML private NumberAxis correlationXAxis;
+    @FXML private DatePicker correlationDateDebut;
+    @FXML private DatePicker correlationDateFin;
+    @FXML private LineChart<String, Number> correlationChart;
+    @FXML private CategoryAxis correlationXAxis;
     @FXML private NumberAxis correlationYAxis;
 
     // Utilisateurs
@@ -431,7 +434,7 @@ public class DashboardController {
         }
     }
 
-    // -----------------------------------------------------------
+        // -----------------------------------------------------------
     // Corrélation niveau d'eau / production (défi technique du sujet)
     // -----------------------------------------------------------
 
@@ -439,9 +442,13 @@ public class DashboardController {
     private void handleShowCorrelation() {
         Barrage b = correlationBarrageChoice.getValue();
         if (b == null) return;
+        StringBuilder sb = new StringBuilder("/barrages/" + b.getId() + "/correlation/?");
+        if (correlationDateDebut.getValue() != null) sb.append("date_debut=").append(correlationDateDebut.getValue()).append("&");
+        if (correlationDateFin.getValue() != null) sb.append("date_fin=").append(correlationDateFin.getValue()).append("&");
+        String path = sb.toString();
         runAsync(() -> {
             try {
-                JsonNode node = ApiClient.get("/barrages/" + b.getId() + "/correlation/");
+                JsonNode node = ApiClient.get(path);
                 Platform.runLater(() -> renderCorrelationChart(node, b.getNom()));
             } catch (Exception e) { throw new RuntimeException(e); }
         }, () -> {});
@@ -449,16 +456,18 @@ public class DashboardController {
 
     private void renderCorrelationChart(JsonNode points, String barrageNom) {
         correlationChart.getData().clear();
-        XYChart.Series<Number, Number> niveauSeries = new XYChart.Series<>();
+        XYChart.Series<String, Number> niveauSeries = new XYChart.Series<>();
         niveauSeries.setName("Niveau d'eau (m)");
-        XYChart.Series<Number, Number> productionSeries = new XYChart.Series<>();
+        XYChart.Series<String, Number> productionSeries = new XYChart.Series<>();
         productionSeries.setName("Production (MWh)");
 
-        int index = 0;
+        // Les points arrivent déjà triés chronologiquement par l'API (dates ascendantes).
+        // On utilise la date réelle comme catégorie de l'axe X, pas un simple index,
+        // pour que la progression dans le temps soit visible même s'il y a des trous.
         for (JsonNode p : points) {
-            if (!p.get("niveau_m").isNull()) niveauSeries.getData().add(new XYChart.Data<>(index, p.get("niveau_m").asDouble()));
-            if (!p.get("energie_produite_mwh").isNull()) productionSeries.getData().add(new XYChart.Data<>(index, p.get("energie_produite_mwh").asDouble()));
-            index++;
+            String dateLabel = p.get("date").asText(); // format ISO "yyyy-MM-dd"
+            if (!p.get("niveau_m").isNull()) niveauSeries.getData().add(new XYChart.Data<>(dateLabel, p.get("niveau_m").asDouble()));
+            if (!p.get("energie_produite_mwh").isNull()) productionSeries.getData().add(new XYChart.Data<>(dateLabel, p.get("energie_produite_mwh").asDouble()));
         }
         correlationChart.setTitle("Corrélation niveau d'eau / production — " + barrageNom);
         correlationChart.getData().addAll(niveauSeries, productionSeries);
