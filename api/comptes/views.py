@@ -6,6 +6,8 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.utils.html import strip_tags
+
 
 from .models import Utilisateur, PasswordResetToken
 from .serializers import (
@@ -99,14 +101,26 @@ class ForgotPasswordView(APIView):
         # Réponse volontairement identique que l'email existe ou non (anti-énumération).
         if user:
             reset = PasswordResetToken.objects.create(utilisateur=user)
-            reset_link = f"{settings.FRONTEND_RESET_URL}?token={reset.token}"
+            
+            # Option A : Envoyer uniquement le token brut sur une seule ligne courte
+            # Cela évite les lignes de plus de 76 caractères qui déclenchent le découpage Quoted-Printable
+            html_content = f"""
+            <p>Bonjour,</p>
+            <p>Voici votre code de réinitialisation de mot de passe (valide 30 min) :</p>
+            <p><strong>{reset.token}</strong></p>
+            <p>Copiez ce code directement dans votre application JavaFX.</p>
+            """
+            
             send_mail(
                 subject="HydroWatt — Réinitialisation de mot de passe",
-                message=f"Voici votre lien de réinitialisation (valide 30 min) : {reset_link}",
+                message=strip_tags(html_content),
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[email],
+                html_message=html_content,
                 fail_silently=True,
             )
+
+            
         return Response({"detail": "Si ce compte existe, un email a été envoyé."})
 
 
